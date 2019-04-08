@@ -26,7 +26,7 @@ func main() {
 	payment := NewPayment(15700, 1, "123456789ABCD")
 
 	// Sandbox, Merchant, Customer Name, Card, Payment, Order ID
-	order, err := SendCreditCardPayment(true, merchant, "Comprador crédito simples", card, payment, "2014111703")
+	order, err := gocielo.SendCreditCardPayment(true, merchant, "Comprador crédito simples", card, payment, "2014111703")
 	if err != nil {
 	  fmt.Println(err)
     	  return
