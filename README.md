@@ -40,4 +40,3 @@ func main() {
 * Cartão de débito
 * Transferência eletrônica
 * Boleto
-* Eletronic
