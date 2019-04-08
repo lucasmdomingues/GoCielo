@@ -17,7 +17,7 @@ import (
 func main() {
 	
 	// ID Merchant & Merchant Key
-  merchant := NewMerchant("ID", "KEY")
+  	merchant := NewMerchant("ID", "KEY")
 
 	// Number, Holder, Expiration Date, Brand, Security Code, Save Card
 	card := NewCreditCard("1234123412341231", "Teste Holder", "12/2030", "Visa", "123", false)
@@ -32,6 +32,6 @@ func main() {
     	  return
 	}
   
-  fmt.Println(order.Payment.ReturnMessage)
+  	fmt.Println(order.Payment.ReturnMessage)
 }
 ```
