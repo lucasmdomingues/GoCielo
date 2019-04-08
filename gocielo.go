@@ -8,9 +8,10 @@ import (
 	"net/http"
 )
 
-const CIELO_PREFIX = "https://apisandbox.cieloecommerce.cielo.com.br"
+const CIELO_SANDBOX_PREFIX = "https://apisandbox.cieloecommerce.cielo.com.br"
+const CIELO_PRODUCTION_PREFIX = "https://api.cieloecommerce.cielo.com.br"
 
-func SendCreditCardPayment(merchant *Merchant, customerName string, card *CreditCard, payment *Payment, orderID string) (*Order, error) {
+func SendCreditCardPayment(sandbox bool, merchant *Merchant, customerName string, card *CreditCard, payment *Payment, orderID string) (*Order, error) {
 
 	data, err := json.Marshal(&Order{
 		MerchantOrderID: orderID,
@@ -37,7 +38,13 @@ func SendCreditCardPayment(merchant *Merchant, customerName string, card *Credit
 		return nil, err
 	}
 
-	url := fmt.Sprintf("%s/1/sales/", CIELO_PREFIX)
+	var url string
+
+	if sandbox == true {
+		url = fmt.Sprintf("%s/1/sales/", CIELO_SANDBOX_PREFIX)
+	} else {
+		url = fmt.Sprintf("%s/1/sales/", CIELO_PRODUCTION_PREFIX)
+	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
