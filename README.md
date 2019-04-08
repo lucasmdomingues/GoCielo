@@ -28,8 +28,8 @@ func main() {
 	// Sandbox, Merchant, Customer Name, Card, Payment, Order ID
 	order, err := SendCreditCardPayment(false, merchant, "Comprador crédito simples", card, payment, "2014111703")
 	if err != nil {
-		fmt.Println(err)
-    return
+	  fmt.Println(err)
+    	  return
 	}
   
   fmt.Println(order.Payment.ReturnMessage)
