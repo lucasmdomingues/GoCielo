@@ -30,3 +30,8 @@ func main() {
 	fmt.Println(order.Payment.ReturnMessage)
 }
 ```
+
+### TO DO
+* Cartão de débito
+* Transferência eletrônica
+* Boleto
