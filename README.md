@@ -9,6 +9,8 @@ go get github.com/lucasmdomingues/gocielo
 ### Cartão de crédito - transação simples.
 
 ```go
+package main
+
 import (
 	"fmt"
 
