@@ -16,22 +16,22 @@ import (
 
 func main() {
 	
-	// ID Merchant & Merchant Key
-  	merchant := NewMerchant("ID", "KEY")
+	// Merchant ID & Merchant Key
+	merchant := gocielo.NewMerchant("ID", "KEY")
 
 	// Number, Holder, Expiration Date, Brand, Security Code, Save Card
-	card := NewCreditCard("1234123412341231", "Teste Holder", "12/2030", "Visa", "123", false)
-	
-	// Amount,Installments, Soft Descriptor
-	payment := NewPayment(15700, 1, "123456789ABCD")
+	card := gocielo.NewCreditCard("1234123412341231", "Teste Holder", "12/2030", "Visa", "123", false)
+
+	// Amount,Installments, Soft Descriptor, Provider
+	payment := gocielo.NewPayment(15700, 1, "123456789ABCD", "Simulado")
 
 	// Sandbox, Merchant, Customer Name, Card, Payment, Order ID
-	order, err := SendCreditCardPayment(true, merchant, "Comprador crédito simples", card, payment, "2014111703")
+	order, err := gocielo.ExecuteCreditCardPayment(true, merchant, "Comprador crédito simples", card, payment, "2014111703")
 	if err != nil {
-	  fmt.Println(err)
-    	  return
+		fmt.Println(err)
+		return
 	}
-  
-  	fmt.Println(order.Payment.ReturnMessage)
+
+	fmt.Println(order.Payment.ReturnMessage)
 }
 ```

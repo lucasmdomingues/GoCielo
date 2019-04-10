@@ -8,43 +8,73 @@ import (
 	"net/http"
 )
 
-const CIELO_SANDBOX_PREFIX = "https://apisandbox.cieloecommerce.cielo.com.br"
-const CIELO_PRODUCTION_PREFIX = "https://api.cieloecommerce.cielo.com.br"
+const cieloSandboxPrefix = "https://apisandbox.cieloecommerce.cielo.com.br"
+const cieloProductionPrefix = "https://api.cieloecommerce.cielo.com.br"
 
-func SendCreditCardPayment(sandbox bool, merchant *Merchant, customerName string, card *CreditCard, payment *Payment, orderID string) (*Order, error) {
+func NewPayment(amount, installments int64, softDescriptor, provider string) *Payment {
+	return &Payment{
+		Amount:         amount,
+		Installments:   installments,
+		SoftDescriptor: softDescriptor,
+		Provider:       provider,
+	}
+}
 
-	data, err := json.Marshal(&Order{
-		MerchantOrderID: orderID,
-		Customer: &Customer{
-			Name: customerName,
-		},
-		Payment: &Payment{
-			Type:           "CreditCard",
-			Amount:         payment.Amount,
-			Installments:   payment.Installments,
-			SoftDescriptor: payment.SoftDescriptor,
-			CreditCard: &CreditCard{
-				CardNumber:     card.CardNumber,
-				Holder:         card.Holder,
-				ExpirationDate: card.ExpirationDate,
-				SecurityCode:   card.SecurityCode,
-				Brand:          card.Brand,
+func NewCreditCard(number, holder, expirationDate, brand, securityCode string, saveCard bool) *CreditCard {
+	return &CreditCard{
+		CardNumber:     number,
+		Holder:         holder,
+		ExpirationDate: expirationDate,
+		SaveCard:       saveCard,
+		Brand:          brand,
+		SecurityCode:   securityCode,
+	}
+}
+
+func NewMerchant(merchantID, merchantKey string) *Merchant {
+	return &Merchant{
+		Id:  merchantID,
+		Key: merchantKey,
+	}
+}
+
+func ExecuteCreditCardPayment(sandbox bool, merchant *Merchant, customerName string, card *CreditCard, payment *Payment, orderID string) (*Order, error) {
+
+	data, err := json.Marshal(
+		&Order{
+			MerchantOrderID: orderID,
+			Customer: &Customer{
+				Name: customerName,
 			},
-			Country:  "BRA",
-			Currency: "BRL",
-			Provider: "Simulado",
-		}})
+			Payment: &Payment{
+				Type:           "CreditCard",
+				Amount:         payment.Amount,
+				Installments:   payment.Installments,
+				SoftDescriptor: payment.SoftDescriptor,
+				CreditCard: &CreditCard{
+					CardNumber:     card.CardNumber,
+					Holder:         card.Holder,
+					ExpirationDate: card.ExpirationDate,
+					SecurityCode:   card.SecurityCode,
+					Brand:          card.Brand,
+				},
+				Country:  "BRA",
+				Currency: "BRL",
+				Provider: payment.Provider,
+			}})
 	if err != nil {
 		return nil, err
 	}
 
-	var url string
+	var prefix string
 
 	if sandbox == true {
-		url = fmt.Sprintf("%s/1/sales/", CIELO_SANDBOX_PREFIX)
+		prefix = cieloSandboxPrefix
 	} else {
-		url = fmt.Sprintf("%s/1/sales/", CIELO_PRODUCTION_PREFIX)
+		prefix = cieloProductionPrefix
 	}
+
+	url := fmt.Sprintf("%s/1/sales/", prefix)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -75,30 +105,4 @@ func SendCreditCardPayment(sandbox bool, merchant *Merchant, customerName string
 	}
 
 	return order, nil
-}
-
-func NewPayment(amount, installments int64, softDescriptor string) *Payment {
-	return &Payment{
-		Amount:         amount,
-		Installments:   installments,
-		SoftDescriptor: softDescriptor,
-	}
-}
-
-func NewCreditCard(number, holder, expirationDate, brand, securityCode string, saveCard bool) *CreditCard {
-	return &CreditCard{
-		CardNumber:     number,
-		Holder:         holder,
-		ExpirationDate: expirationDate,
-		SaveCard:       saveCard,
-		Brand:          brand,
-		SecurityCode:   securityCode,
-	}
-}
-
-func NewMerchant(merchantID, merchantKey string) *Merchant {
-	return &Merchant{
-		Id:  merchantID,
-		Key: merchantKey,
-	}
 }
