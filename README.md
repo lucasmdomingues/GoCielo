@@ -9,6 +9,14 @@ go get github.com/lucasmdomingues/gocielo
 ### Cartão de crédito - transação simples.
 
 ```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/lucasmdomingues/gocielo"
+)
+
 func main() {
 	
 	// Merchant ID & Merchant Key
