@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-const cieloSandboxPrefix = "https://apisandbox.cieloecommerce.cielo.com.br"
-const cieloProductionPrefix = "https://api.cieloecommerce.cielo.com.br"
+const apiCieloSandboxPrefix = "https://apisandbox.cieloecommerce.cielo.com.br"
+const apiCieloProductionPrefix = "https://api.cieloecommerce.cielo.com.br"
 
 func NewPayment(amount, installments int64, softDescriptor, provider string) *Payment {
 	return &Payment{
@@ -69,9 +69,9 @@ func ExecuteCreditCardPayment(sandbox bool, merchant *Merchant, customerName str
 	var prefix string
 
 	if sandbox == true {
-		prefix = cieloSandboxPrefix
+		prefix = apiCieloSandboxPrefix
 	} else {
-		prefix = cieloProductionPrefix
+		prefix = apiCieloProductionPrefix
 	}
 
 	url := fmt.Sprintf("%s/1/sales/", prefix)
